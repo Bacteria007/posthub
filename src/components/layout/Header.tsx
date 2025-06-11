@@ -3,7 +3,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Home, Search, Bell, User, Bookmark, Grid3X3, List } from 'lucide-react';
+import { Home, Search, User, Bookmark, Grid3X3, List } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
@@ -54,11 +54,7 @@ const Header: React.FC<HeaderProps> = ({
               </Button>
             </Link>
 
-            <Button variant="ghost" size="sm" className="relative hover:bg-gray-100">
-              <Bell className="w-4 h-4" />
-              <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-            </Button>
-
+          
             <Button variant="ghost" size="sm" className="hover:bg-gray-100 ">
               <Bookmark className="w-4 h-4" />
             </Button>

@@ -36,7 +36,7 @@ const Posts: React.FC = () => {
         <Card className="shadow-lg">
           <CardContent className="p-0">
             <PostList
-              isAdmin={true} // Changed to true to enable admin features
+              isAdmin={false} // Changed to true to enable admin features
               view={view}
               posts={filteredPosts} // Pass filtered posts
             />
