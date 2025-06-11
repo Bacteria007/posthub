@@ -9,7 +9,7 @@ import {
   Users,
   Calendar
 } from 'lucide-react';
-import PostGridCard from '../PostGridCard';
+import PostGridCard from './PostGridCard';
 import PostListCard from './PostListCard';
 import AdminPostTable from './AdminPostTable';
 import {
