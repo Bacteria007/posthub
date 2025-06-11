@@ -1,32 +1,34 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { Card, CardContent } from '@/components/ui/card';
-import { useFetchPost } from '@/hooks/usePostApi';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
-import { 
-  ArrowLeft, 
-  Calendar, 
-  Heart, 
-  MessageCircle, 
-  Share2, 
-  Bookmark, 
+import React, { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { Card, CardContent } from "@/components/ui/card";
+import { useFetchPost } from "@/hooks/usePostApi";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  ArrowLeft,
+  Calendar,
+  Heart,
+  MessageCircle,
+  Share2,
+  Bookmark,
   Eye,
   Clock,
   Tag,
-  ThumbsUp
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+  ThumbsUp,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { showToast } from "@/helpers/showToast";
+import { Toaster } from "sonner";
 
 const PostPage: React.FC = () => {
   const params = useParams();
   const id = params.id as string;
   const { data: post, isLoading } = useFetchPost(parseInt(id, 10));
   const router = useRouter();
-  
+
   const [isLiked, setIsLiked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -36,7 +38,7 @@ const PostPage: React.FC = () => {
   const likes = 50;
   const comments = 10;
   const views = 200;
-  const categories = ['Technology', 'Design', 'Business', 'Health', 'Travel', 'Food'];
+  const categories = ["Technology", "Design", "Business", "Health", "Travel", "Food"];
   const category = categories[parseInt(id) % categories.length];
 
   // Scroll progress handler
@@ -48,8 +50,8 @@ const PostPage: React.FC = () => {
       setScrollProgress(progress);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   if (isLoading) {
@@ -118,7 +120,7 @@ const PostPage: React.FC = () => {
           <p className="text-gray-600 mb-8 leading-relaxed">
             The post you&#39;re looking for doesn&#39;t exist or may have been removed.
           </p>
-          <Button 
+          <Button
             onClick={() => router.back()}
             className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white px-8 py-3 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
           >
@@ -133,8 +135,9 @@ const PostPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
       {/* Progress Bar */}
+      <Toaster/>
       <div className="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
-        <div 
+        <div
           className="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 transition-all duration-150"
           style={{ width: `${scrollProgress}%` }}
         ></div>
@@ -144,24 +147,28 @@ const PostPage: React.FC = () => {
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-40 shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               className="hover:scale-105 transition-all duration-300 hover:shadow-md border-gray-200 hover:border-purple-300"
               onClick={() => router.back()}
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back
             </Button>
-            
+
             <div className="flex items-center space-x-2">
               <Button
                 variant="ghost"
                 size="sm"
-                className={`transition-all duration-300 ${isBookmarked ? 'text-yellow-600 bg-yellow-50' : 'hover:text-yellow-600 hover:bg-yellow-50'}`}
-                onClick={() => setIsBookmarked(!isBookmarked)}
+                className={`transition-all duration-300 ${isBookmarked ? "text-yellow-600 bg-yellow-50" : "hover:text-yellow-600 hover:bg-yellow-50"
+                  }`}
+                onClick={() => {
+                  showToast.success({ title: `Post saved` })
+                  setIsBookmarked(!isBookmarked);
+                }}
               >
-                <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-current' : ''}`} />
+                <Bookmark className={`w-4 h-4 ${isBookmarked ? "fill-current" : ""}`} />
               </Button>
               <Button
                 variant="ghost"
@@ -194,17 +201,26 @@ const PostPage: React.FC = () => {
               {post.title}
             </h1>
 
-            {/* Author Info */}
-            <div className="flex items-center justify-center space-x-4 py-6">
-              <Avatar className="w-16 h-16 ring-4 ring-white shadow-lg">
-                <AvatarImage src={`https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60`} />
-                <AvatarFallback className="bg-gradient-to-br from-purple-500 to-blue-500 text-white text-lg">
-                  U{post.userId}
-                </AvatarFallback>
-              </Avatar>
-              <div className="text-left">
-                <p className="font-semibold text-gray-900 text-lg">User {post.userId}</p>
-                <div className="flex items-center space-x-4 text-sm text-gray-600">
+            {/* Enhanced User Card */}
+            <div className="relative mx-auto max-w-2xl bg-white/90 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-gray-100 animate-fade-in-up">
+              <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 w-24 h-24 bg-gradient-to-br from-purple-100 to-blue-100 rounded-full border-4 border-white shadow-lg">
+                <Avatar className="w-full h-full ring-4 ring-purple-200/50">
+                  <AvatarImage
+                    src={`https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60`}
+                    alt={`User ${post.userId}`}
+                    className="object-cover rounded-full transition-transform duration-300 hover:scale-105"
+                  />
+                  <AvatarFallback className="bg-gradient-to-br from-purple-500 to-blue-500 text-white text-xl font-semibold">
+                    U{post.userId}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+              <div className="text-center mt-12">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                  User {post.userId}
+                </h2>
+                <p className="text-gray-600 mt-1 text-sm">Creative Writer</p>
+                <div className="flex items-center justify-center space-x-4 mt-4 text-gray-500">
                   <div className="flex items-center space-x-1">
                     <Clock className="w-4 h-4" />
                     <span>{readTime} min read</span>
@@ -212,7 +228,16 @@ const PostPage: React.FC = () => {
                   <span>•</span>
                   <span>3 days ago</span>
                 </div>
+                <div className="mt-4 flex justify-center space-x-3">
+                  <Badge variant="secondary" className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 hover:bg-green-200 transition-all duration-300">
+                    <ThumbsUp className="w-3 h-3 mr-1" /> Helpful
+                  </Badge>
+                  <Badge variant="secondary" className="bg-gradient-to-r from-yellow-100 to-amber-100 text-yellow-800 hover:bg-yellow-200 transition-all duration-300">
+                    <Eye className="w-3 h-3 mr-1" /> {views.toLocaleString()} Views
+                  </Badge>
+                </div>
               </div>
+              <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-20 h-2 bg-gradient-to-r from-purple-300 to-blue-300 rounded-full blur-sm opacity-70 animate-pulse"></div>
             </div>
 
             {/* Stats */}
@@ -236,8 +261,8 @@ const PostPage: React.FC = () => {
           <Card className="overflow-hidden shadow-xl border-0 bg-white/70 backdrop-blur-sm">
             <CardContent className="p-8 md:p-12">
               <div className="prose prose-lg prose-gray max-w-none">
-                <div className="text-gray-700 leading-relaxed text-lg" style={{ lineHeight: '1.8' }}>
-                  {post.body.split('\n').map((paragraph, index) => (
+                <div className="text-gray-700 leading-relaxed text-lg" style={{ lineHeight: "1.8" }}>
+                  {post.body.split("\n").map((paragraph, index) => (
                     <p key={index} className="mb-6 first:text-xl first:font-medium first:text-gray-800">
                       {paragraph}
                     </p>
@@ -252,14 +277,13 @@ const PostPage: React.FC = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-6">
                 <button
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 ${
-                    isLiked 
-                      ? 'text-red-500 bg-red-50' 
-                      : 'text-gray-600 hover:text-red-500 hover:bg-red-50'
-                  }`}
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 ${isLiked
+                      ? "text-red-500 bg-red-50"
+                      : "text-gray-600 hover:text-red-500 hover:bg-red-50"
+                    }`}
                   onClick={() => setIsLiked(!isLiked)}
                 >
-                  <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
+                  <Heart className={`w-5 h-5 ${isLiked ? "fill-current" : ""}`} />
                   <span className="font-medium">{likes + (isLiked ? 1 : 0)}</span>
                 </button>
 
@@ -278,14 +302,13 @@ const PostPage: React.FC = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className={`transition-all duration-300 ${
-                    isBookmarked 
-                      ? 'text-yellow-600 bg-yellow-50' 
-                      : 'hover:text-yellow-600 hover:bg-yellow-50'
-                  }`}
+                  className={`transition-all duration-300 ${isBookmarked
+                      ? "text-yellow-600 bg-yellow-50"
+                      : "hover:text-yellow-600 hover:bg-yellow-50"
+                    }`}
                   onClick={() => setIsBookmarked(!isBookmarked)}
                 >
-                  <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-current' : ''}`} />
+                  <Bookmark className={`w-4 h-4 ${isBookmarked ? "fill-current" : ""}`} />
                 </Button>
 
                 <Button
@@ -301,9 +324,9 @@ const PostPage: React.FC = () => {
 
           {/* Navigation */}
           <div className="mt-12 flex justify-center">
-            <Button 
+            <Button
               onClick={() => router.back()}
-              className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600  hover:to-blue-600 text-white px-8 py-3 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white px-8 py-3 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Posts
@@ -315,8 +338,8 @@ const PostPage: React.FC = () => {
       {/* Floating Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute top-1/4 left-8 w-64 h-64 bg-purple-300/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-8 w-96 h-96 bg-blue-300/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute top-1/2 left-1/2 w-48 h-48 bg-pink-300/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '4s' }}></div>
+        <div className="absolute bottom-1/4 right-8 w-96 h-96 bg-blue-300/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "2s" }}></div>
+        <div className="absolute top-1/2 left-1/2 w-48 h-48 bg-pink-300/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "4s" }}></div>
       </div>
     </div>
   );
