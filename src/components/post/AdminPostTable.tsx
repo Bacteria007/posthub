@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Eye, Edit, Trash2 } from 'lucide-react';
+import { useDeletePost } from '@/hooks/usePostApi';
 
 interface Post {
   id: number;
@@ -21,11 +22,11 @@ interface AdminPostTableProps {
   editPostId: number | null;
   onEdit: (id: number) => void;
   onDelete: (id: number) => void;
-  deletePost: any;
+  deletePost: ReturnType<typeof useDeletePost>;
   isDeleting:boolean
 }
 
-const AdminPostTable: React.FC<AdminPostTableProps> = ({ posts, editPostId, onEdit, onDelete, deletePost,isDeleting }) => {
+const AdminPostTable: React.FC<AdminPostTableProps> = ({ posts, editPostId, onEdit, onDelete, deletePost }) => {
   return (
     <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 mb-8">
       <Table>

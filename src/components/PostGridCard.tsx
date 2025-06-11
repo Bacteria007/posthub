@@ -15,6 +15,7 @@ import {
   Share2,
   Bookmark
 } from 'lucide-react';
+import { useDeletePost } from '@/hooks/usePostApi';
 
 interface Post {
   id: number;
@@ -32,7 +33,7 @@ interface PostGridCardProps {
   isAdmin: boolean;
   onEdit: (id: number) => void;
   onDelete: (id: number) => void;
-  deletePost: any;
+  deletePost: ReturnType<typeof useDeletePost>;
 }
 
 const PostGridCard: React.FC<PostGridCardProps> = ({ post, index, isAdmin, onEdit, onDelete, deletePost }) => {

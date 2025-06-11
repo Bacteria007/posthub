@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { postsApi, } from '@/lib/api';
-import { CreatePostData, Post, UpdatePostData } from '@/types/post.types';
+import { CreatePostData, UpdatePostData } from '@/types/post.types';
 
 // Query Keys
 export const POST_QUERY_KEYS = {
@@ -33,9 +33,9 @@ export const useCreatePost = () => {
 
     return useMutation({
         mutationFn: (data: CreatePostData) => postsApi.createPost(data),
-         onSettled: () => {
+        onSettled: () => {
             queryClient.invalidateQueries({ queryKey: POST_QUERY_KEYS.posts });
-                   },
+        },
         onError: (error) => {
             console.error('Failed to create post:', error);
         },
@@ -49,24 +49,9 @@ export const useUpdatePost = () => {
     return useMutation({
         mutationFn: ({ id, data }: { id: number; data: UpdatePostData }) =>
             postsApi.updatePost(id, data),
-        // onSuccess: (updatedPost) => {
-        //     // Update the specific post in cache
-        //     queryClient.setQueryData(POST_QUERY_KEYS.post(updatedPost.id), updatedPost);
-
-        //     // Update the post in the posts list cache
-        //     queryClient.setQueryData<Post[]>(POST_QUERY_KEYS.posts, (oldPosts) => {
-        //         if (!oldPosts) return [updatedPost];
-        //         return oldPosts.map(post =>
-        //             post.id === updatedPost.id ? updatedPost : post
-        //         );
-        //     });
-
-        //     // Invalidate queries to ensure consistency
-        //     queryClient.invalidateQueries({ queryKey: POST_QUERY_KEYS.posts });
-        // },
-         onSettled: () => {
+        onSettled: () => {
             queryClient.invalidateQueries({ queryKey: POST_QUERY_KEYS.posts });
-                   },
+        },
         onError: (error) => {
             console.error('Failed to update post:', error);
         },
@@ -81,7 +66,7 @@ export const useDeletePost = () => {
         mutationFn: (id: number) => postsApi.deletePost(id),
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: POST_QUERY_KEYS.posts });
-                   },
+        },
         onError: (error) => {
             console.error('Failed to delete post:', error);
         },
