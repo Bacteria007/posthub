@@ -197,7 +197,7 @@ const PostPage: React.FC = () => {
             {/* Author Info */}
             <div className="flex items-center justify-center space-x-4 py-6">
               <Avatar className="w-16 h-16 ring-4 ring-white shadow-lg">
-                <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${post.userId}`} />
+                <AvatarImage src={`https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60`} />
                 <AvatarFallback className="bg-gradient-to-br from-purple-500 to-blue-500 text-white text-lg">
                   U{post.userId}
                 </AvatarFallback>
