@@ -7,7 +7,8 @@ import {
   Plus,
   TrendingUp,
   Users,
-  Calendar
+  Calendar,
+  ArrowUp
 } from 'lucide-react';
 import PostGridCard from './PostGridCard';
 import PostListCard from './PostListCard';
@@ -51,6 +52,23 @@ export default function PostList({ isAdmin = false, view = 'grid', posts: propPo
 
   // Use fetched posts initially, then manage locally
   const [localPosts, setLocalPosts] = useState<Post[]>(propPosts.length > 0 ? propPosts : fetchedPosts);
+// State for "Go to Top" button visibility
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Handle scroll event to show/hide button
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsVisible(window.scrollY > 300); // Show button after scrolling 300px
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Scroll to top function
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   useEffect(() => {
     if (propPosts.length > 0) {
@@ -239,7 +257,7 @@ export default function PostList({ isAdmin = false, view = 'grid', posts: propPo
         ) : view === 'grid' ? (
           <>
             <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-3 gap-6 space-y-6">
-              {currentPosts.map((post, index) => (
+              {propPosts.map((post, index) => (
                 <div key={post.id} className="break-inside-avoid mb-6">
                   <PostGridCard
                     post={post}
@@ -253,54 +271,12 @@ export default function PostList({ isAdmin = false, view = 'grid', posts: propPo
                 </div>
               ))}
             </div>
-            {totalPages > 1 && (
-              <div className="flex justify-center items-center space-x-2 mt-8">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                  disabled={currentPage === 1}
-                >
-                  Previous
-                </Button>
-                {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-                  let pageNum;
-                  if (totalPages <= 5) {
-                    pageNum = i + 1;
-                  } else if (currentPage <= 3) {
-                    pageNum = i + 1;
-                  } else if (currentPage >= totalPages - 2) {
-                    pageNum = totalPages - 4 + i;
-                  } else {
-                    pageNum = currentPage - 2 + i;
-                  }
-                  return (
-                    <Button
-                      key={pageNum}
-                      variant={currentPage === pageNum ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => setCurrentPage(pageNum)}
-                      className={currentPage === pageNum ? 'bg-gradient-to-br from-blue-600 via-purple-600 to-pink-500 text-white' : ''}
-                    >
-                      {pageNum}
-                    </Button>
-                  );
-                })}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                  disabled={currentPage === totalPages}
-                >
-                  Next
-                </Button>
-              </div>
-            )}
+          
           </>
         ) : (
           <>
             <div className="space-y-4">
-              {currentPosts.map((post, index) => (
+              {propPosts.map((post, index) => (
                 <PostListCard
                   key={post.id}
                   deletePost={deletePostMutation}
@@ -313,49 +289,7 @@ export default function PostList({ isAdmin = false, view = 'grid', posts: propPo
                 />
               ))}
             </div>
-            {totalPages > 1 && (
-              <div className="flex justify-center items-center space-x-2 mt-8">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                  disabled={currentPage === 1}
-                >
-                  Previous
-                </Button>
-                {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-                  let pageNum;
-                  if (totalPages <= 5) {
-                    pageNum = i + 1;
-                  } else if (currentPage <= 3) {
-                    pageNum = i + 1;
-                  } else if (currentPage >= totalPages - 2) {
-                    pageNum = totalPages - 4 + i;
-                  } else {
-                    pageNum = currentPage - 2 + i;
-                  }
-                  return (
-                    <Button
-                      key={pageNum}
-                      variant={currentPage === pageNum ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => setCurrentPage(pageNum)}
-                      className={currentPage === pageNum ? 'bg-gradient-to-br from-blue-600 via-purple-600 to-pink-500 text-white' : ''}
-                    >
-                      {pageNum}
-                    </Button>
-                  );
-                })}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                  disabled={currentPage === totalPages}
-                >
-                  Next
-                </Button>
-              </div>
-            )}
+           
           </>
         )}
 
@@ -429,6 +363,19 @@ export default function PostList({ isAdmin = false, view = 'grid', posts: propPo
               />
             )}
           </>
+        )}
+        {/* Go to Top Button */}
+       {isVisible && (
+          <div className="fixed left-1/2 transform -translate-x-1/2 bottom-0 w-full h-16 flex items-center justify-center">
+            <div className="absolute w-full h-full bg-gradient-to-tl from-blue-200 via-pink-200 to-purple-300 opacity-60 rounded-full blur-md animate-pulse"></div>
+            <Button
+              onClick={scrollToTop}
+              className="relative z-10 bg-gradient-to-br from-blue-600 to-purple-600 text-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:from-blue-700 hover:to-purple-700"
+              aria-label="Go to top"
+            >
+              <ArrowUp className="w-6 h-6" />
+            </Button>
+          </div>
         )}
       </div>
     </div>

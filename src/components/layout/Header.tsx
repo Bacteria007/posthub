@@ -66,7 +66,7 @@ const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Search & Filters Bar */}
-        <div className="flex items-center justify-between py-4 border-t border-gray-100">
+        <div className="items-center justify-between py-4 border-t border-gray-100 sm:flex hidden">
           <div className="flex items-center space-x-4 flex-1">
             {/* Search */}
             <div className="relative flex-1 max-w-md">
