@@ -9,6 +9,8 @@ Welcome to PostHub, a project for managing and displaying posts with a rich text
 - [Git](https://git-scm.com/) (for cloning the repository)
 
 ## Installation
+npm install
+npm run dev
 
 1. **Clone the Repository**
    Clone this repository to your local machine using:
