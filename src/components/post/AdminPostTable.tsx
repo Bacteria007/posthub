@@ -50,7 +50,7 @@ const AdminPostTable: React.FC<AdminPostTableProps> = ({ posts, editPostId, onEd
               </TableCell>
               <TableCell>
                 <div className="flex items-center space-x-2">
-                  <Link href={`/post/${post.id}`}>
+                  <Link href={`/posts/${post.id}`}>
                     <Button variant="ghost" size="sm" className="text-blue-500 hover:text-blue-700 hover:bg-blue-50">
                       <Eye className="size-4" />
                     </Button>

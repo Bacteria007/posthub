@@ -140,7 +140,7 @@ const PostListCard: React.FC<PostListCardProps> = ({ post, isAdmin, onEdit, onDe
                         </button>
 
                         <Link
-                            href={`/posts/${post.id}#comments`}
+                            href={`/post/${post.id}#comments`}
                             className="flex items-center space-x-2 text-sm text-gray-500 hover:text-blue-500 transition-colors"
                         >
                             <MessageCircle className="w-4 h-4" />
