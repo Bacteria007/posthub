@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Badge } from '../ui/badge';
+import { useDeletePost } from '@/hooks/usePostApi';
 
 interface Post {
     id: number;
@@ -34,7 +35,7 @@ interface PostListCardProps {
     isAdmin: boolean;
     onEdit: (id: number) => void;
     onDelete: (id: number) => void;
-    deletePost: any;
+    deletePost: ReturnType<typeof useDeletePost>;
 }
 const PostListCard: React.FC<PostListCardProps> = ({ post, isAdmin, onEdit, onDelete, deletePost }) => {
     const [isLiked, setIsLiked] = useState(false);
