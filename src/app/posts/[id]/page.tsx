@@ -254,7 +254,7 @@ const PostPage: React.FC = () => {
                 <button
                   className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 ${
                     isLiked 
-                      ? 'text-red-500 bg-red-50 shadow-md' 
+                      ? 'text-red-500 bg-red-50' 
                       : 'text-gray-600 hover:text-red-500 hover:bg-red-50'
                   }`}
                   onClick={() => setIsLiked(!isLiked)}
@@ -303,7 +303,7 @@ const PostPage: React.FC = () => {
           <div className="mt-12 flex justify-center">
             <Button 
               onClick={() => router.back()}
-              className="bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 hover:from-purple-600 hover:via-pink-600 hover:to-blue-600 text-white px-8 py-3 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600  hover:to-blue-600 text-white px-8 py-3 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Posts
