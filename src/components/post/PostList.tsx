@@ -365,7 +365,7 @@ export default function PostList({ isAdmin = false, view = 'grid', posts: propPo
           </>
         )}
         {/* Go to Top Button */}
-       {isVisible && (
+       {isVisible && !isAdmin && (
           <div className="fixed left-1/2 transform -translate-x-1/2 bottom-0 w-full h-16 flex items-center justify-center">
             <div className="absolute w-full h-full bg-gradient-to-tl from-blue-200 via-pink-200 to-purple-300 opacity-60 rounded-full blur-md animate-pulse"></div>
             <Button
